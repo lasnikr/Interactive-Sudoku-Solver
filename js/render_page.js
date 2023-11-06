@@ -628,6 +628,16 @@ class ConstraintManager {
         this._addToPanel(config);
         this._configs.push(config);
         break;
+      case 'ThermoEoO':
+        config = {
+          cells: constraint.cells,
+          name: 'ThermoEoO',
+          constraint: constraint,
+          displayElem: this._display.drawThermometer(constraint.cells),
+        };
+        this._addToPanel(config);
+        this._configs.push(config);
+        break;
       case 'Jigsaw':
         this._jigsawManager.setConstraint(constraint);
         break;
@@ -756,6 +766,10 @@ class ConstraintManager {
         break;
       case 'thermo':
         constraint = new SudokuConstraint.Thermo(...cells);
+        this.loadConstraint(constraint);
+        break;
+      case 'thermo-even-or-odd':
+        constraint = new SudokuConstraint.ThermoEoO(...cells);
         this.loadConstraint(constraint);
         break;
       case 'jigsaw':

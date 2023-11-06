@@ -431,6 +431,13 @@ class SudokuConstraint {
     }
   }
 
+  static ThermoEoO = class ThermoEoO extends SudokuConstraint {
+    constructor(...cells) {
+      super(arguments);
+      this.cells = cells;
+    }
+  }
+
   static Whisper = class Whisper extends SudokuConstraint {
     constructor(difference, ...cells) {
       // German whisper lines omit the difference, so the
@@ -909,6 +916,15 @@ class SudokuBuilder {
           }
           break;
 
+        case 'ThermoEoO':
+          cells = constraint.cells.map(c => shape.parseCellId(c).cell);
+          for (let i = 1; i < cells.length; i++) {
+            yield new SudokuConstraintHandler.BinaryConstraint(
+              cells[i - 1], cells[i], (a, b) => a < b 
+              && ((a % 2 == 0 && b % 2 == 0) || (a % 2 != 0 && b % 2 != 0)));
+          }
+          break;
+        
         case 'Whisper':
           let difference = constraint.difference;
           cells = constraint.cells.map(c => shape.parseCellId(c).cell);
